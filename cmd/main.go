@@ -7,16 +7,19 @@ import (
 	"net/http"
 	"vumanskyi/url-shortener/config"
 	"vumanskyi/url-shortener/internal/handler"
+	"vumanskyi/url-shortener/internal/middleware"
+	"vumanskyi/url-shortener/pkg/redis"
 )
 
-const port = ":3000"
-
 func main() {
-	appConfig := config.AppConfig{}
+	appConfig := config.NewAppConfig()
+	redisClient := redis.InitClient(appConfig.RedisConfig)
+
 	router := chi.NewRouter()
+	rateLimiter := middleware.NewRateLimiter(redisClient, appConfig.RateLimit.MaxRequest, appConfig.RateLimit.ExpiredAt)
+	router.Use(rateLimiter.Limit)
 
-	h := handler.NewHandler()
-
+	h := handler.NewHandler(redisClient)
 	router.Get("/{shortUrl}", h.GetShortenedUrl)
 	router.Post("/", h.GetShortenedUrl)
 
