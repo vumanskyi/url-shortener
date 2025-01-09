@@ -20,7 +20,10 @@ func encodeBase62(num int64) string {
 // GenerateShortURL takes a URL and generates a short URL in the form of a Base62 encoded string
 // from the first 8 characters of the SHA256 hash of the original URL.
 func GenerateShortURL(originalURL string) string {
-	// Hash the URL
+	if !IsValidURL(originalURL) {
+		return ""
+	}
+
 	hash := sha256.Sum256([]byte(originalURL))
 
 	// Convert the hash to Base62
@@ -33,6 +36,10 @@ func GenerateShortURL(originalURL string) string {
 // IsValidURL takes a raw URL and checks if it is valid or not.
 // A URL is valid if it can be parsed, has a scheme and a host.
 func IsValidURL(rawURL string) bool {
+	if rawURL == "" {
+		return false
+	}
+
 	parsedURL, err := url.ParseRequestURI(rawURL)
 	if err != nil || parsedURL.Scheme == "" || parsedURL.Host == "" {
 		return false
