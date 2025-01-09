@@ -14,8 +14,8 @@ type handler struct {
 }
 
 type shortenRequest struct {
-	Url       string `json:"url"`
-	ExpiredAt int64  `json:"expired_at"`
+	Url       string        `json:"url"`
+	ExpiredAt time.Duration `json:"expired_at"`
 }
 
 type shortenResponse struct {
@@ -68,10 +68,7 @@ func (h *handler) CreateShortenedUrl(w http.ResponseWriter, r *http.Request) {
 	// Generate the short URL
 	shortUrl := service.GenerateShortURL(req.Url)
 
-	// Calculate expiration time in Redis
-	expiration := time.Until(time.Unix(req.ExpiredAt, 0))
-
-	if err := h.redisClient.Set(r.Context(), shortUrl, req.Url, expiration).Err(); err != nil {
+	if err := h.redisClient.Set(r.Context(), shortUrl, req.Url, req.ExpiredAt).Err(); err != nil {
 		http.Error(w, "Failed to save to Redis", http.StatusInternalServerError)
 		return
 	}
