@@ -37,7 +37,7 @@ func NewAppConfig() *AppConfig {
 
 	return &AppConfig{
 		Host:        "localhost",
-		Port:        "3000",
+		Port:        "8080",
 		RedisConfig: redisConfig,
 		RateLimit:   rateLimit,
 	}

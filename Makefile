@@ -4,6 +4,20 @@ COVERAGE_DIR=coverage
 COVERAGE_FILE=$(COVERAGE_DIR)/coverage.out
 COVERAGE_HTML=$(COVERAGE_DIR)/coverage.html
 
+OUTPUT_DIR=bin
+BINARY_NAME=url-shortener
+
+build:
+	@echo "Building the project..."
+	mkdir -p $(OUTPUT_DIR)
+	go build -o $(OUTPUT_DIR)/$(BINARY_NAME) ./cmd
+	@echo "Binary created at $(OUTPUT_DIR)/$(BINARY_NAME)"
+
+# Run the binary
+run: build
+	@echo "Running the application..."
+	./$(OUTPUT_DIR)/$(BINARY_NAME)
+
 # Default target
 all: test
 
