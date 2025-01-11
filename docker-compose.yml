@@ -1,12 +1,20 @@
 version: '3.9'
 
 services:
-#    app:
-#        build: .
+    app:
+        build: .
+        ports:
+            - "${APP_PORT}:${APP_PORT}"
+        environment:
+            - APP_ENV=prod
+            - APP_PORT=8080
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - REDIS_PASSWORD=""
+            - REDIS_DB=0
 #        ports:
-#            - "3000:3000"
-#        volumes:
-#            - .:/app
+#            - "8080:8080"
+
     redis:
         image: redis:7.4-alpine
         ports:

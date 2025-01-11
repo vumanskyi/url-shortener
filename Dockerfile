@@ -1,11 +1,25 @@
-FROM golang:1.20
+FROM golang:1.23-alpine AS builder
+
+RUN apk add --no-cache git
 
 WORKDIR /app
 
+COPY go.mod go.sum ./
+
+RUN go mod download
+
 COPY . .
 
-RUN go build -o main .
+RUN go build -o url-shortener ./cmd
 
-EXPOSE 8080
+FROM alpine:latest
 
-CMD ["./main"]
+WORKDIR /app
+
+COPY --from=builder /app/url-shortener .
+
+ENV APP_PORT=8080
+
+EXPOSE ${APP_PORT}
+
+CMD ["./url-shortener"]

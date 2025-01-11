@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"github.com/redis/go-redis/v9"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -34,12 +35,14 @@ func (rl *rateLimiter) Limit(next http.Handler) http.Handler {
 		// Get current request count from Redis
 		count, err := rl.redisClient.Get(context.Background(), key).Int()
 		if err != nil && err != redis.Nil {
+			slog.Error("Failed to get request count from Redis", "error", err.Error())
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
 		// If the count exceeds the limit, reject the request
 		if count >= rl.maxRequests {
+			slog.Error("Rate limit exceeded", "ip", ip)
 			http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
 			return
 		}
@@ -47,6 +50,7 @@ func (rl *rateLimiter) Limit(next http.Handler) http.Handler {
 		// Increment the request count in Redis
 		_, err = rl.redisClient.Incr(context.Background(), key).Result()
 		if err != nil {
+			slog.Error("Failed to increment request count in Redis", "error", err.Error())
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
@@ -55,11 +59,13 @@ func (rl *rateLimiter) Limit(next http.Handler) http.Handler {
 		if count == 0 {
 			_, err := rl.redisClient.Expire(context.Background(), key, rl.expiredAt).Result()
 			if err != nil {
+				slog.Error("Failed to set expiration on Redis key", "error", err.Error())
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 				return
 			}
 		}
 
+		slog.Info("Rate limit check passed", "ip", ip, "count", count)
 		// Proceed with the request if within rate limit
 		next.ServeHTTP(w, r)
 	})

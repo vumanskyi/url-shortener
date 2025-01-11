@@ -21,11 +21,11 @@ func main() {
 
 	h := handler.NewHandler(redisClient)
 	router.Get("/{shortUrl}", h.GetShortenedUrl)
-	router.Post("/", h.GetShortenedUrl)
+	router.Post("/", h.CreateShortenedUrl)
 
-	slog.Info("Start application.")
+	slog.Info(fmt.Sprintf("Start application. Port: %s", appConfig.Port))
 
-	if err := http.ListenAndServe(fmt.Sprintf("%s:%s", appConfig.Host, appConfig.Port), router); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", appConfig.Port), router); err != nil {
 		slog.Error("Failed to start server", "error", err)
 	}
 }

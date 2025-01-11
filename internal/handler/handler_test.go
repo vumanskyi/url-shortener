@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-redis/redismock/v9"
 	"github.com/stretchr/testify/assert"
@@ -29,7 +30,7 @@ func Test_handler_GetShortenedUrl(t *testing.T) {
 			name:     "valid short URL",
 			shortUrl: "abcd123",
 			mockRedisFunc: func() {
-				mock.ExpectGet("abcd123").SetVal("https://example.com")
+				mock.ExpectGet(fmt.Sprintf("%s:%s", prefix, "abcd123")).SetVal("https://example.com")
 			},
 			expectedStatus: http.StatusFound,
 			expectedBody:   "",
@@ -38,7 +39,7 @@ func Test_handler_GetShortenedUrl(t *testing.T) {
 			name:     "short URL not found",
 			shortUrl: "notfound",
 			mockRedisFunc: func() {
-				mock.ExpectGet("notfound").RedisNil()
+				mock.ExpectGet(fmt.Sprintf("%s:%s", prefix, "notfound")).RedisNil()
 			},
 			expectedStatus: http.StatusNotFound,
 			expectedBody:   "Short URL not found\n",
@@ -47,7 +48,7 @@ func Test_handler_GetShortenedUrl(t *testing.T) {
 			name:     "invalid URL stored in Redis",
 			shortUrl: "invalid",
 			mockRedisFunc: func() {
-				mock.ExpectGet("invalid").SetVal("invalid-url")
+				mock.ExpectGet(fmt.Sprintf("%s:%s", prefix, "invalid")).SetVal("invalid-url")
 			},
 			expectedStatus: http.StatusInternalServerError,
 			expectedBody:   "Invalid URL stored in Redis\n",
@@ -104,7 +105,7 @@ func Test_handler_CreateShortenedUrl(t *testing.T) {
 				ExpiredAt: expiration,
 			},
 			mockRedisFunc: func() {
-				mock.ExpectSet(shortURL, validURL, expiration).SetVal("OK")
+				mock.ExpectSet(fmt.Sprintf("%s:%s", prefix, shortURL), validURL, expiration).SetVal("OK")
 			},
 			expectedStatus: http.StatusOK,
 		},
