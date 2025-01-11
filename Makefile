@@ -18,6 +18,8 @@ run: build
 	@echo "Running the application..."
 	./$(OUTPUT_DIR)/$(BINARY_NAME)
 
+copy-env:
+	@cp .env.example .env
 # Default target
 all: test
 

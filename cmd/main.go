@@ -23,9 +23,9 @@ func main() {
 	router.Get("/{shortUrl}", h.GetShortenedUrl)
 	router.Post("/", h.CreateShortenedUrl)
 
-	slog.Info(fmt.Sprintf("Start application. Host: %s, Port: %s", appConfig.Host, appConfig.Port))
+	slog.Info(fmt.Sprintf("Start application. Port: %s", appConfig.Port))
 
-	if err := http.ListenAndServe(fmt.Sprintf("%s:%s", appConfig.Host, appConfig.Port), router); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", appConfig.Port), router); err != nil {
 		slog.Error("Failed to start server", "error", err)
 	}
 }
