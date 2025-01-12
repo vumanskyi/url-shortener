@@ -1,0 +1,37 @@
+1. Your URL Shortener application has been successfully deployed!
+
+2. Access your application:
+
+   {{- if eq .Values.service.type "NodePort" }}
+   If you're using NodePort, you can access the application via the following:
+   Run the following commands to get the URL:
+   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "url-shortener.fullname" . }})
+   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+   echo http://$NODE_IP:$NODE_PORT
+
+   {{- else if eq .Values.service.type "ClusterIP" }}
+   If you're using ClusterIP, the application is only accessible within the cluster.
+   To access it locally, you can use `kubectl port-forward`:
+   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "url-shortener.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+   export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+   echo "Visit http://127.0.0.1:8080 to use your application"
+   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+
+   {{- end }}
+
+3. Redis service is also running:
+   - Redis is running on the default port 6379.
+   - To connect to Redis, use the following connection details:
+     Host: redis
+     Port: 6379
+     Password: (empty)
+
+4. You can scale your application by updating the number of replicas:
+   Run the following command to scale your deployment:
+   kubectl scale deployment/url-shortener --replicas=<desired_number>
+
+5. For more information, refer to the Kubernetes documentation for services and deployments:
+   - https://kubernetes.io/docs/concepts/services-networking/service/
+   - https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+
+Enjoy using your URL Shortener service!
