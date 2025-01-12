@@ -43,4 +43,4 @@ To run the project locally using Docker Compose, follow these steps:
     docker-compose up --build
     ```
 
-3. For kubernetes details you can find it [here](https://github.com/vumanskyi/url-shortener/tree/infrastructure/k8s)
+3. For kubernetes details you can find it [here](https://github.com/vumanskyi/url-shortener/blob/main/infrastructure/k8s/README.md)
