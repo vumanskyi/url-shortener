@@ -1,8 +1,8 @@
-# URL Shortener API 🚀
+# URL Shortener API
 
 A simple and scalable URL Shortener API built with **Golang** and deployed using **Docker** and **Kubernetes**. This project showcases modern **cloud-native development** practices and includes automated **CI/CD pipelines** using **GitHub Actions**.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Golang** - The core programming language for the API.
 - **Redis** - In-memory data store for caching.
@@ -11,7 +11,7 @@ A simple and scalable URL Shortener API built with **Golang** and deployed using
 - **GitHub Actions** - CI/CD for automated Docker builds, pushes, and deployments.
 - **Minikube** - Local Kubernetes for testing deployments.
 
-## ⚙️ Features
+## Features
 
 - Shorten long URLs into easily shareable, custom URLs.
 - Custom alias for shortened URLs.
@@ -19,7 +19,7 @@ A simple and scalable URL Shortener API built with **Golang** and deployed using
 - Cache for frequently accessed URLs using Redis.
 - Scalable with Kubernetes for easy deployment.
 
-## 🧪 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -28,7 +28,7 @@ A simple and scalable URL Shortener API built with **Golang** and deployed using
 - **Helm**: For Kubernetes deployments.
 - **Redis**: Running locally or in your Kubernetes cluster.
 
-### 🐋 Running Locally with Docker Compose
+### Running Locally with Docker Compose
 
 To run the project locally using Docker Compose, follow these steps:
 
