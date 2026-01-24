@@ -1,8 +1,8 @@
-# 🚀 URL Shortener Deployment on Minikube with Kubernetes
+# URL Shortener Deployment on Minikube with Kubernetes
 
 This guide will walk you through deploying your URL Shortener application on Minikube using Kubernetes. It includes setting up Redis as a backend service and ensuring the app runs smoothly.
 
-### 📦 1. Prerequisites
+### 1. Prerequisites
 
 Minikube installed: https://minikube.sigs.k8s.io/docs/start/
 
@@ -15,7 +15,7 @@ Ensure Minikube is running:
 minikube start
 ```
 
-### 📂 2. Project Structure
+###  2. Project Structure
 ```
 .
 ├── redis-deployment.yaml
@@ -23,7 +23,7 @@ minikube start
 ├── url-shortener-deployment.yaml
 └── url-shortener-service.yaml
 ```
-### 🛠 3. Apply Kubernetes Resources
+### 3. Apply Kubernetes Resources
 
 Run the following commands to apply the deployments and services:
 
@@ -41,7 +41,7 @@ Check the services:
 ```
 kubectl get services
 ```
-### 🌐 4. Access the Application
+### 4. Access the Application
 
 Use Minikube to expose the url-shortener service:
 
@@ -54,7 +54,7 @@ This command will open the application in your default browser. Alternatively, y
 minikube service list
 ```
 
-### 📄 5. Cleaning Up
+### 5. Cleaning Up
 
 To delete all resources:
 ```
